@@ -3,5 +3,6 @@ int main(){
 	int a,b;
 	scanf("%d%d",&a,&b);
 	printf("%d\n",a+b);
+	//wknfkwekfk
 	return 0;
 }
