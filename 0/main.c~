@@ -3,6 +3,9 @@ int main(){
 	int a,b;
 	scanf("%d%d",&a,&b);
 	printf("%d\n",a+b);
+<<<<<<< HEAD
 	//wknfkwekfk
+=======
+>>>>>>> a0097ac6c0123bb4096a4cd1dbb53174f3102619
 	return 0;
 }
