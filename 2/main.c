@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
+
 #define max 10010
 #define DATA char
 //#define debug_input
@@ -70,31 +72,10 @@ int main()
     int i;
     int remove_times=remove;
     for(i=0;array[i]!='\0';i++){
-        #ifdef debug_process
-            printf("char is %c\n",array[i]);
-        #endif // debug_process
-        #ifdef debug_process
-            printf("empty==%d\n",IsEmptyStack(ptrStack));
-        #endif // debug_process
-        if(!IsEmptyStack(ptrStack)){
-            #ifdef debug_process
-                printf("remove_times==%d\n",remove_times);
-            #endif // debug_process
-            if(remove_times>0){
-                #ifdef debug_process
-                    printf("char==%d,top==%d\n",char_to_int(array[i]),char_to_int(ptrStack->array[ptrStack->top]));
-                    if(char_to_int(array[i])<char_to_int(ptrStack->array[ptrStack->top])){
-                        printf("Pop!\n");
-                    }
-                    else{
-                        printf("No Pop!\n");
-                    }
-                #endif // debug_process
-                if(char_to_int(array[i])<char_to_int(ptrStack->array[ptrStack->top])){
-                    Pop(ptrStack);
-                    remove_times--;
-                }
-            }
+        while(!IsEmptyStack(ptrStack)&&remove_times>0
+              &&char_to_int(array[i])<char_to_int(ptrStack->array[ptrStack->top])){
+            Pop(ptrStack);
+            remove_times--;
         }
         Push(ptrStack,array[i]);
     }
@@ -107,4 +88,3 @@ int main()
 
     return 0;
 }
-
