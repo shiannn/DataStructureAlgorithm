@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
-#define max 10010
+#define max 100000005
 #define DATA char
 //#define debug_input
 //#define debug_process
@@ -53,10 +53,11 @@ int char_to_int(char c){
     return (c-'0');
 }
 
+char array[max];
 int main()
 {
     char tmp;
-    char array[max];
+
     int remove;
     scanf("%s",array);
     scanf("%d",&remove);
@@ -120,4 +121,3 @@ int main()
 
     return 0;
 }
-

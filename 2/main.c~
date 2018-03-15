@@ -7,6 +7,7 @@
 #define DATA char
 //#define debug_input
 //#define debug_process
+//#define check
 
 struct ArrayStack{
     int top;
@@ -71,20 +72,52 @@ int main()
 
     int i;
     int remove_times=remove;
-    for(i=0;array[i]!='\0';i++){
+
+    //先找出首位
+    char first=array[0];
+    int pos_of_first=0;
+    for(i=0;i<remove_times+1;i++){//0~remove_times都有可能當首位
+        if(array[i]!='0'){
+            if(char_to_int(array[i])<char_to_int(first)){
+                first=array[i];
+                pos_of_first=i;
+            }
+        }
+    }
+    #ifdef check
+        printf("get1\n");
+        printf("%c\n%d\n",first,pos_of_first);
+    #endif // check
+
+    //得到首位字元first和它的位置pos_of_first
+    remove_times=remove_times-pos_of_first;//用在首位的remove
+    //首位先不入stack
+
+    #ifdef check
+        printf("%d\n",remove_times);
+    #endif
+
+    for(i=pos_of_first+1;array[i]!='\0';i++){
         while(!IsEmptyStack(ptrStack)&&remove_times>0
               &&char_to_int(array[i])<char_to_int(ptrStack->array[ptrStack->top])){
-            Pop(ptrStack);
             remove_times--;
+            Pop(ptrStack);
         }
         Push(ptrStack,array[i]);
     }
 
+    #ifdef check
+        printf("get2\n");
+    #endif
+
     //Q:已經掃完一遍，但是remove_times卻還有剩?
     //A:取最右邊的total-remove個字就好(因為他們整個一定是遞增的)
-    for(i=0;i<total-remove;i++){
+
+    printf("%c",first);
+    for(i=0;i<total-remove-1;i++){
         printf("%c",ptrStack->array[i]);
     }
 
     return 0;
 }
+
