@@ -1,3 +1,6 @@
+//參考http://blog.csdn.net/qq508618087/article/details/52584133
+//參考http://morris821028.github.io/2015/06/26/zj-b415/
+//與助教王行健討論
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
