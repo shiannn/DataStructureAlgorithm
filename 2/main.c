@@ -114,10 +114,16 @@ int main()
     //Q:已經掃完一遍，但是remove_times卻還有剩?
     //A:取最右邊的total-remove個字就好(因為他們整個一定是遞增的)
 
-    printf("%c",first);
+    //printf("%c",first);
+    putchar(first);
+    ptrStack->array[total-remove-1]='\0';
+    puts(ptrStack->array);
+    //printf("%s",ptrStack->array);
+    /*
     for(i=0;i<total-remove-1;i++){
         printf("%c",ptrStack->array[i]);
     }
+    */
 
     return 0;
 }
