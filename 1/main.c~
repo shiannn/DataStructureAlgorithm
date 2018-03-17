@@ -159,13 +159,15 @@ void insert_tail(struct Node** head_ref,char letter_to_add){
 }
 
 void Print_double_Linklist(struct Node*head){
-    printf("forward\n");
+    //printf("forward\n");
     struct Node *last=head,*ptr=head;
     while(ptr!=NULL){
-        printf("%c ",ptr->letter);
-        last=ptr;
+        printf("%c",ptr->letter);
+        //last=ptr;
         ptr=ptr->next;
     }
+    printf("\n");
+    /*
     printf("\n");
     //得到last
     printf("backward\n");
@@ -176,6 +178,7 @@ void Print_double_Linklist(struct Node*head){
         ptr=ptr->prev;
     }
     printf("\n");
+    */
 }
 void deleteNode(struct Node**head_ref,struct Node*del){
     if(*head_ref==NULL||del==NULL){
