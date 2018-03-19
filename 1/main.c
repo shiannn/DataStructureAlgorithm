@@ -15,20 +15,19 @@ struct Node{
 char buf[max];
 
 void insert_head(struct Node**head_ref,char letter_to_add);
-void insert_after(struct Node*prev_node,char letter_to_add);
+void insert_after(struct Node*prev_node,char letter_to_add,struct Node**tail_ref);
 void insert_tail(struct Node** head_ref,char letter_to_add);
 void deleteNode(struct Node**head_ref,struct Node*del);
 void Print_double_Linklist(struct Node*head);
-void delete_whole_linklist(struct Node**head_ref);
+void delete_whole_linklist(struct Node**head_ref,struct Node**tail_ref);
 int is_lower_case(char c);
 int main()
 {
     struct Node*head=(struct Node*)malloc(sizeof(struct Node));
     head->next=NULL;
     head->prev=NULL;
-    struct Node*tail=(struct Node*)malloc(sizeof(struct Node));
-    tail->next=NULL;
-    tail->prev=NULL;
+    struct Node*tail=head;//tail一開始放在head上
+
 
     int T_testcases;
     scanf("%d",&T_testcases);
@@ -53,7 +52,7 @@ int main()
         for(j=0;buf[j]!='\0';j++){
             if(is_lower_case(buf[j])){
                 /*預留一格head因此基本上只會用到insert_after*/
-                insert_after(cursor,buf[j]);
+                insert_after(cursor,buf[j],&tail);
                 cursor=cursor->next;
             }
             else{//operation
@@ -63,7 +62,7 @@ int main()
                     }
                 }
                 else if(buf[j]=='L'){//向右一格
-                    if(cursor->next!=NULL){
+                    if(cursor!=tail){
                         cursor=cursor->next;
                     }
                 }
@@ -74,23 +73,33 @@ int main()
         #endif // test_ouput
 
         //刪去整個鏈結串列
-        delete_whole_linklist(&(head->next));
+        delete_whole_linklist(&(head->next),&tail);
     }
 
     return 0;
 }
-int main02(){
-    struct Node*head=NULL;
-    insert_head(&head,'b');
-    insert_head(&head,'b');
-    insert_head(&head,'b');
-    insert_head(&head,'b');
-    insert_tail(&head,'c');
-    struct Node *ptr=head->next->next;
-    insert_after(ptr,'m');
+int main01(){
+    struct Node*head=(struct Node*)malloc(sizeof(struct Node));
+    head->next=NULL;
+    head->prev=NULL;
+    struct Node*tail=head;//tail一開始放在head上
+    insert_after(head,'a',&tail);
+    insert_after(head,'a',&tail);
+    insert_after(head,'a',&tail);
+    insert_after(head,'a',&tail);
+    struct Node *PTR,*ptr=head->next->next;
+    insert_after(ptr,'m',&tail);
 
-    Print_double_Linklist(head);
+    for(PTR=head->next;PTR!=tail;PTR=PTR->next){
+        printf("%c\n",PTR->letter);
+    }
+    Print_double_Linklist(head->next);
+    delete_whole_linklist(&head,&tail);
+    if(tail==NULL&&head==NULL){
+        printf("NULL");
+    }
 }
+//加入tail在insert_after
 
 //傳入head的位址可以直接在函式內部修改head的值
 void insert_head(struct Node**head_ref,char letter_to_add){
@@ -115,7 +124,7 @@ void insert_head(struct Node**head_ref,char letter_to_add){
     return;
 }
 
-void insert_after(struct Node*prev_node,char letter_to_add){
+void insert_after(struct Node*prev_node,char letter_to_add,struct Node**tail_ref){
     if(prev_node==NULL){
         printf("can not insert after NULL");
         return;
@@ -129,6 +138,9 @@ void insert_after(struct Node*prev_node,char letter_to_add){
     newNode->prev=prev_node;
     if(newNode->next!=NULL){
         newNode->next->prev=newNode;
+    }
+    else{//newNode是新的tail
+        *tail_ref=newNode;
     }
 }
 
@@ -203,7 +215,7 @@ int is_lower_case(char c){
     }
     return 0;
 }
-void delete_whole_linklist(struct Node**head_ref){
+void delete_whole_linklist(struct Node**head_ref,struct Node**tail_ref){
     struct Node* current = *head_ref;
     struct Node* next;
 
@@ -213,5 +225,5 @@ void delete_whole_linklist(struct Node**head_ref){
        current=next;
     }
     *head_ref = NULL;
+    *tail_ref = NULL;
 }
-
