@@ -19,7 +19,7 @@ void insert_after(struct Node*prev_node,char letter_to_add,struct Node**tail_ref
 void insert_tail(struct Node** head_ref,char letter_to_add);
 void deleteNode(struct Node**head_ref,struct Node*del);
 void Print_double_Linklist(struct Node*head);
-void delete_whole_linklist(struct Node**head_ref,struct Node**tail_ref);
+void delete_whole_linklist(struct Node**head_ref);
 int is_lower_case(char c);
 int main()
 {
@@ -73,7 +73,8 @@ int main()
         #endif // test_ouput
 
         //刪去整個鏈結串列
-        delete_whole_linklist(&(head->next),&tail);
+        delete_whole_linklist(&(head->next));
+        tail=head;
     }
 
     return 0;
@@ -94,7 +95,7 @@ int main01(){
         printf("%c\n",PTR->letter);
     }
     Print_double_Linklist(head->next);
-    delete_whole_linklist(&head,&tail);
+    delete_whole_linklist(&head);
     if(tail==NULL&&head==NULL){
         printf("NULL");
     }
@@ -215,7 +216,7 @@ int is_lower_case(char c){
     }
     return 0;
 }
-void delete_whole_linklist(struct Node**head_ref,struct Node**tail_ref){
+void delete_whole_linklist(struct Node**head_ref){
     struct Node* current = *head_ref;
     struct Node* next;
 
@@ -225,5 +226,5 @@ void delete_whole_linklist(struct Node**head_ref,struct Node**tail_ref){
        current=next;
     }
     *head_ref = NULL;
-    *tail_ref = NULL;
 }
+
