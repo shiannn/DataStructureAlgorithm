@@ -241,6 +241,17 @@ int main()
                         selection_mode=0;
                     }
                 }
+                else if(buf[j]=='I'){
+                    cursor=head;
+                    cursor_left_or_right=-2147483648;
+                }
+                else if(buf[j]=='A'){
+                    cursor=tail;
+                    cursor_left_or_right=2147483647;
+                }
+            }
+            if(cursor==cursor_2){
+                cursor_left_or_right=0;
             }
         }
 
