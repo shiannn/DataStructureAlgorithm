@@ -5,7 +5,7 @@
 //#define debug_input
 //#define into_linklist
 #define test_output
-
+//#define test_clipboard
 struct Node{
     char letter;
     struct Node *next;
@@ -22,6 +22,7 @@ void Print_double_Linklist(struct Node*head);
 void delete_whole_linklist(struct Node**head_ref);
 int is_lower_case(char c);
 void char_cover_selection(struct Node* cursor_left,struct Node* cursor_right,char letter_to_add,struct Node**tail_ref);
+void cut_the_selection(struct Node **clipboard_L,struct Node **clipboard_R,struct Node *cursor_L,struct Node *cursor_R,struct Node **tail);
 int main()
 {
     struct Node*head=(struct Node*)malloc(sizeof(struct Node));
@@ -53,6 +54,9 @@ int main()
         //head->next是起始字元
         struct Node *cursor=head;
         struct Node *cursor_2=head;//用來select
+
+        struct Node *clipboard_left=NULL;
+        struct Node *clipboard_right=NULL;
         int cursor_left_or_right=0;//>0則cursor在右
         for(j=0;buf[j]!='\0';j++){
             if(is_lower_case(buf[j])){
@@ -110,8 +114,136 @@ int main()
                         selection_mode=0;
                     }
                 }
+                else if(buf[j]=='D'){//剪下
+                    if(selection_mode==1){
+                        if(cursor_left_or_right!=0){//兩個cursor沒有重合
+                            /*有選到東西*/
+                            if(cursor_left_or_right>0){
+                                //cursor在右
+                                cut_the_selection(&clipboard_left,&clipboard_right,cursor_2,cursor,&tail);
+                                cursor=cursor_2;//cursor變成在左側的那個
+                            }
+                            else if(cursor_left_or_right<0){
+                                //cursor在左
+                                cut_the_selection(&clipboard_left,&clipboard_right,cursor,cursor_2,&tail);
+                            }
+                            selection_mode=0;//關掉selection_mode
+                        }
+                        #ifdef test_clipboard
+                        struct Node *para;
+                        for(para=clipboard_left;para!=clipboard_right;para=para->next){
+                            printf("%c\n",para->letter);
+                        }
+                        printf("%c\n",para->letter);
+                        #endif // test_clipboard
+                    }
+                }
+                else if(buf[j]=='P'){//貼上
+                    if(clipboard_left!=NULL&&clipboard_right!=NULL){//clipboard有東西
+                        if(selection_mode==0){//不取代
+                            if(cursor==tail){//貼在文件尾
+                                clipboard_left->prev=cursor;
+                                clipboard_right->next=cursor->next;
+                                cursor->next=clipboard_left;
+
+                                tail=clipboard_right;
+                            }
+                            else{//貼在文件其他地方
+                                clipboard_left->prev=cursor;
+                                clipboard_right->next=cursor->next;
+                                cursor->next->prev=clipboard_right;
+                                cursor->next=clipboard_left;
+
+                           }
+                        }
+                        else if(selection_mode==1){//取代某段
+                            if(cursor_left_or_right==0){//重合
+                                if(cursor==tail){//貼在文件尾
+                                    clipboard_left->prev=cursor;
+                                    clipboard_right->next=cursor->next;
+                                    cursor->next=clipboard_left;
+
+                                    tail=clipboard_right;
+                                }
+                                else{//貼在文件其他地方
+                                    clipboard_left->prev=cursor;
+                                    clipboard_right->next=cursor->next;
+                                    cursor->next->prev=clipboard_right;
+                                    cursor->next=clipboard_left;
+                                }
+                            }
+                            else if(cursor_left_or_right>0){
+                                //cursor在右邊
+                                if(cursor==tail){
+                                    clipboard_left->prev=cursor_2;
+                                    clipboard_right->next=cursor->next;
+                                    cursor_2->next=clipboard_left;
+
+                                    tail=clipboard_right;
+                                }
+                                else{
+                                    clipboard_left->prev=cursor_2;
+                                    clipboard_right->next=cursor->next;
+                                    cursor->next->prev=clipboard_right;
+                                    cursor_2->next=clipboard_left;
+                                }
+                            }
+                            else if(cursor_left_or_right<0){
+                                //cursor在左邊
+                                if(cursor_2==tail){
+                                    clipboard_left->prev=cursor;
+                                    clipboard_right->next=cursor_2->next;
+                                    cursor->next=clipboard_left;
+
+                                    tail=clipboard_right;
+                                }
+                                else{
+                                    clipboard_left->prev=cursor;
+                                    clipboard_right->next=cursor_2->next;
+                                    cursor_2->next->prev=clipboard_right;
+                                    cursor->next=clipboard_left;
+                                }
+                            }
+                        }
+                        cursor=clipboard_right;
+                        clipboard_left=NULL;
+                        clipboard_right=NULL;
+
+                        selection_mode=0;//離開selection_mode
+                    }
+                    else{
+                        if(selection_mode==1){//用空白取代
+                            if(cursor_left_or_right>0){
+                                //cursor在右
+                                if(cursor==tail){
+                                    cursor_2->next=cursor->next;
+                                    tail=cursor_2;
+                                }
+                                else{
+                                    cursor->next->prev=cursor_2;
+                                    cursor_2->next=cursor->next;
+                                }
+                                cursor=cursor_2;
+                            }
+                            else if(cursor_left_or_right<0){
+                                //cursor在左
+                                if(cursor_2==tail){
+                                    cursor->next=cursor_2->next;
+                                    tail=cursor;
+                                }
+                                else{
+                                    cursor_2->next->prev=cursor;
+                                    cursor->next=cursor_2->next;
+                                }
+                                //cursor=cursor;
+                            }
+                        }
+                        selection_mode=0;
+                    }
+                }
             }
         }
+
         #ifdef test_output
         Print_double_Linklist(head->next);
         #endif // test_ouput
@@ -290,7 +422,22 @@ void char_cover_selection(struct Node* cursor_left,struct Node* cursor_right,cha
     }
 }
 
+void cut_the_selection(struct Node **clipboard_L,struct Node **clipboard_R,struct Node *cursor_L,struct Node *cursor_R,struct Node **tail){
+    //存下剪貼簿
+    *clipboard_L=cursor_L->next;
+    *clipboard_R=cursor_R;
+
+    //接好
+    if(cursor_R==*tail){
+        cursor_L->next=cursor_R->next;
+        //維護tail
+        *tail=cursor_L;
+    }
+    else{
+        cursor_L->next=cursor_R->next;
+        cursor_R->next->prev=cursor_L;
+    }
+}
 /*
 njkwefnkweHHHHHVLLjiyoietjrgo
 */
-

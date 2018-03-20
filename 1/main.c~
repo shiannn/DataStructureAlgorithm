@@ -67,10 +67,12 @@ int main()
                     //需要掌握cursor和cursor_2誰左誰右
                     if(cursor_left_or_right>0){//cursor在右
                         char_cover_selection(cursor_2,cursor,buf[j],&tail);
+                        cursor=cursor_2->next;
                         selection_mode=0;//exit selection_mode
                     }
                     else if(cursor_left_or_right<0){//cursor在左
                         char_cover_selection(cursor,cursor_2,buf[j],&tail);
+                        cursor=cursor->next;
                         selection_mode=0;//exit selection_mode
                     }
                     else if(cursor_left_or_right==0){//cursor重合
@@ -287,4 +289,8 @@ void char_cover_selection(struct Node* cursor_left,struct Node* cursor_right,cha
         cursor_right->next->prev=newNode;
     }
 }
+
+/*
+njkwefnkweHHHHHVLLjiyoietjrgo
+*/
 
