@@ -6,6 +6,7 @@
 
 #define max 1000010
 //#define debug_left_and_right
+//#define debug_tail
 struct alpha{
     struct alpha* next;
     struct alpha* pre;
@@ -114,7 +115,8 @@ int main(int argc, const char * argv[]) {
                             select_prob2->next->pre=tmp;
                         }
 
-                    }else{
+                    }
+                    else{
 
                         tmp->pre=select_prob1;
                         tmp->next=select_prob2->next;
@@ -124,12 +126,12 @@ int main(int argc, const char * argv[]) {
                         }
                     }
                     ////////////selectprob2==NULL??
-
+                    /*
                     while (cleaner!=select_prob2) {
-                        free(cleaner->pre);
                         cleaner=cleaner->next;
+                        free(cleaner->pre);
                     }
-
+                    */
                     /////////////
                     //free(select_prob2);
                     now=tmp;
@@ -143,27 +145,31 @@ int main(int argc, const char * argv[]) {
                     case 'H':
                         if (now->pre!=NULL) {
                             now=now->pre;
-                        }
-                        if (!mode) {//反白
-                            //紀錄左右
-                            count_of_selection_mode--;
-                            select_prob2=now;
-                            if (select_prob2==select_prob1) {
-                                count_of_selection_mode=0;
+                            if (!mode) {//反白
+                                //紀錄左右
+                                count_of_selection_mode--;
+                                select_prob2=now;
+                                if (select_prob2==select_prob1) {
+                                    count_of_selection_mode=0;
+                                }
                             }
                         }
+
+
                         break;
                     case 'L':
                         if (now->next!=NULL) {
                             now=now->next;
-                        }
-                        if (!mode) {
-                            count_of_selection_mode++;
-                            select_prob2=now;
-                            if (select_prob1==select_prob2) {
-                                count_of_selection_mode=0;
+                            if (!mode) {
+                                count_of_selection_mode++;
+                                select_prob2=now;
+                                if (select_prob1==select_prob2) {
+                                    count_of_selection_mode=0;
+                                }
                             }
                         }
+
+
                         break;
                     case 'I':
                         now=head;
@@ -221,15 +227,18 @@ int main(int argc, const char * argv[]) {
 
                         break;
                     case 'P':
-                        if (clipboard_head==NULL) {//用空白
+                        /*剪貼簿沒東西*/
+                        if (clipboard_head==NULL) {
                             if (mode) {
                                 break;
                             }else{
                                 mode=(!mode);
                             }
+                            /*在選取模式內*/
                             if (count_of_selection_mode==0) {
                                 break;
                             }
+                            /*真的有選取到文字*/
                             if (count_of_selection_mode<0) {
                                 string *swap=select_prob1;
                                 select_prob1=select_prob2;
@@ -240,9 +249,14 @@ int main(int argc, const char * argv[]) {
                             if (select_prob2->next!=NULL) {
                                 select_prob2->next->pre=select_prob1;
                             }
+                            else{
+                                tail=select_prob1;
+                            }
+                            //沒有維護tail
 
                             break;
                         }
+                        /*不是用空白 剪貼簿有東西*/
                         if (!mode) {
                             /*selection mode*/
                             /*有選到某一段*/
@@ -277,14 +291,15 @@ int main(int argc, const char * argv[]) {
                             }
                             /*cleaning prob*/
                            //////////////////////////////////////
-
+                            /*
                             while (cleaner!=select_prob2) {
-                                free(cleaner->pre);
                                 cleaner=cleaner->next;
+                                free(cleaner->pre);
                             }
-
+                            */
                             //////////////////////////////////////
                         }else{
+                            /*沒有選到selection*/
                             /******/
                             if (now->next==NULL) {
                                 now->next=clipboard_head;
@@ -301,23 +316,26 @@ int main(int argc, const char * argv[]) {
                             }
                         }
                         now=clipboard_tail;
-                        if (now->next==tail) {
+                        if (now->next==NULL) {
                             tail=now;
                         }
                         clipboard_tail=NULL;
                         clipboard_head=NULL;
                         break;
                 }
+                #ifdef debug_tail
+                    printf("tail = %c\n",tail->the_alpha);
+                #endif // debug_tail
             }
            //     printout(&head, &now);
            #ifdef debug_left_and_right
-           printf("mode==%d\n",mode);
-           printf("%d\n",count_of_selection_mode);
+                printf("mode==%d\n",mode);
+                printf("%d\n",count_of_selection_mode);
            #endif // debug_left_and_right
 
         }
         for(now=head->next;now!=NULL;now=now->next){
-            free(now->pre);
+            //free(now->pre);
             printf("%c",now->the_alpha);
         }
 
@@ -346,4 +364,6 @@ aaaVHHHDbbbHVHLP
  o
  bbaaab
 */
+
+
 
