@@ -124,12 +124,12 @@ int main(int argc, const char * argv[]) {
                         }
                     }
                     ////////////selectprob2==NULL??
-                    /*
+
                     while (cleaner!=select_prob2) {
-                        cleaner=cleaner->next;
                         free(cleaner->pre);
+                        cleaner=cleaner->next;
                     }
-                    */
+
                     /////////////
                     //free(select_prob2);
                     now=tmp;
@@ -277,12 +277,12 @@ int main(int argc, const char * argv[]) {
                             }
                             /*cleaning prob*/
                            //////////////////////////////////////
-                            /*
+
                             while (cleaner!=select_prob2) {
-                                cleaner=cleaner->next;
                                 free(cleaner->pre);
+                                cleaner=cleaner->next;
                             }
-                            */
+
                             //////////////////////////////////////
                         }else{
                             /******/
@@ -317,7 +317,7 @@ int main(int argc, const char * argv[]) {
 
         }
         for(now=head->next;now!=NULL;now=now->next){
-            //free(now->pre);
+            free(now->pre);
             printf("%c",now->the_alpha);
         }
 
