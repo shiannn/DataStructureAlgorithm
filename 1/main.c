@@ -1,3 +1,5 @@
+//參考https://www.geeksforgeeks.org/doubly-linked-list/
+//與助教曾千育討論
 #include <stdio.h>
 #include <stdlib.h>
 #define max 1000010
