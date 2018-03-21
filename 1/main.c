@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#define max 1000010
 //#define debug_left_and_right
 struct alpha{
     struct alpha* next;
@@ -29,7 +30,7 @@ int main(int argc, const char * argv[]) {
     scanf("%d",&times);
     int i;
     for (i=0; i<times; i++) {
-        char tar[1000001];
+        char tar[max];
         scanf("%s",tar);
         string *head=NULL;
         string *now=head;
@@ -341,3 +342,4 @@ aaaVHHHDbbbHVHLP
  o
  bbaaab
 */
+
