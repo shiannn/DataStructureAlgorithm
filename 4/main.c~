@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#define big_prime 7393933
+#define big_prime 23399339
 #define small_prime 739399
 
 #define max 10000010
