@@ -3,8 +3,8 @@
 #include <math.h>
 #include <string.h>
 
-#define big_prime 2860486313
-#define small_prime 479001599
+#define big_prime 7393933
+#define small_prime 739399
 
 #define max 10000010
 //#define debug_input
@@ -180,3 +180,4 @@ void count(long long int array[],int n){
         array[i]=((small_prime%big_prime)*(array[i-1]%big_prime))%big_prime;
     }
 }
+
