@@ -3,6 +3,9 @@
 #include <math.h>
 #include <string.h>
 
+#define big_prime 97
+#define small_prime 7
+
 #define max 10000010
 //#define debug_input
 //#define debug_rabin_value
@@ -23,8 +26,14 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
                         int d_prime_power,int q_mod);
 
 int char_to_int(char c);
+void count(long long int array[],int n);
+
+long long int small_prime_power[max];
 int main()
 {
+    /*先算好小質數的各個冪次*/
+    count(small_prime_power,max);
+
     scanf("%s",A_long+1);
     scanf("%s",B_short+1);
     #ifdef debug_input
@@ -34,8 +43,8 @@ int main()
     /*兩個字串前置處理*/
     int length_short=strlen(B_short+1);
     int length_long=strlen(A_long+1);
-    int d_prime=7;
-    int q_mod=97;
+    int d_prime=small_prime;
+    int q_mod=big_prime;
     int k;
     for(k=1;k<=length_short;k++){
         /*填入B的相對位置*/
@@ -98,20 +107,20 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
                         int Num_text,int Num_pattern,\
                         int d_prime_power,int q_mod){
 
-    long long value_A_long=0,value_B_short=0;
+    long long int value_A_long=0,value_B_short=0;
     int i;
     for(i=1;i<=Num_pattern;i++){
 
-        value_A_long=value_A_long*d_prime_power\
-                        +A_relative_position[i];
-        value_B_short=value_B_short*d_prime_power\
-                        +B_relative_position[i];
+        value_A_long=((((value_A_long%q_mod)*(d_prime_power%q_mod))%q_mod)\
+                        +(A_relative_position[i]%q_mod))%q_mod;
+        value_B_short=((((value_B_short%q_mod)*(d_prime_power%q_mod))%q_mod)\
+                        +(B_relative_position[i]%q_mod))%q_mod;
     }
 
     #ifdef debug_rabin_value
     printf("%lld\n%lld\n",value_A_long,value_B_short);
     #endif // debug_rabin_value
-    int h=pow(d_prime_power,Num_pattern-1);
+    int h=small_prime_power[Num_pattern-1];
     int ans=0;
     int temp=0;
     int s;//shift次數
@@ -128,15 +137,15 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
 
             if(A_relative_position_next[s+1]<=Num_pattern-1){
                 /*如果會影響到value 要額外減去一個值*/
-                value_A_long=d_prime_power\
-                *(value_A_long-h*A_relative_position[s+1]-temp*pow(7,Num_pattern-1-A_relative_position_next[s+1]))\
-                        +A_relative_position[s+Num_pattern+1];
+                value_A_long=(((d_prime_power%q_mod)\
+                *(((value_A_long%q_mod-((h%q_mod)*(A_relative_position[s+1]%q_mod))%q_mod)%q_mod-((temp%q_mod)*(small_prime_power[Num_pattern-1-A_relative_position_next[s+1]]%q_mod))%q_mod)%q_mod))%q_mod\
+                        +A_relative_position[s+Num_pattern+1]%q_mod)%q_mod;
             }
             else{
                 /*不影響value 照常運作*/
-                value_A_long=d_prime_power\
-                *(value_A_long-h*A_relative_position[s+1])\
-                        +A_relative_position[s+Num_pattern+1];
+                value_A_long=(((d_prime_power%q_mod)\
+                *((value_A_long%q_mod-(((h%q_mod)*(A_relative_position[s+1]%q_mod))%q_mod))%q_mod))%q_mod\
+                        +A_relative_position[s+Num_pattern+1]%q_mod)%q_mod;
             }
             /*不包含(s+1) 往後pattern格*/
         }
@@ -146,11 +155,21 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
 }
 
 int main01(){
-    int u=char_to_int('z');
-    printf("%d\n",u);
+    count(small_prime_power,200000);
+    int i;
+    for(i=0;i<200000;i++){
+        printf("%lld\n",small_prime_power[i]);
+    }
     return 0;
 }
 int char_to_int(char c){
     return (c-'a');
+}
+void count(long long int array[],int n){
+    array[0]=1;
+    int i;
+    for(i=1;i<n;i++){
+        array[i]=((small_prime%big_prime)*(array[i-1]%big_prime))%big_prime;
+    }
 }
 
