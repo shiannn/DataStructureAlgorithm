@@ -1,3 +1,5 @@
+//與助教黃晴、助教曾千育、助教劉瀚聲、同學楊仁傑討論
+//參考欣穆老師上課投影片
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
