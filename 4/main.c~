@@ -111,11 +111,11 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
     int i;
     for(i=1;i<=Num_pattern;i++){
 
-        value_A_long=((((value_A_long%q_mod)*(d_prime_power%q_mod))%q_mod)\
-                        +(A_relative_position[i]%q_mod))%q_mod;
+        value_A_long=((((value_A_long%q_mod)*d_prime_power)%q_mod)\
+                        +A_relative_position[i])%q_mod;
 
-        value_B_short=((((value_B_short%q_mod)*(d_prime_power%q_mod))%q_mod)\
-                        +(B_relative_position[i]%q_mod))%q_mod;
+        value_B_short=((((value_B_short%q_mod)*d_prime_power)%q_mod)\
+                        +B_relative_position[i])%q_mod;
 
     }
 
@@ -139,18 +139,18 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
 
             if(A_relative_position_next[s+1]<=Num_pattern-1){
                 /*如果會影響到value 要額外減去一個值*/
-                value_A_long=(((d_prime_power%q_mod)\
-                *(((value_A_long%q_mod-((h%q_mod)*(A_relative_position[s+1]%q_mod))%q_mod)%q_mod-((temp%q_mod)*(small_prime_power[Num_pattern-1-A_relative_position_next[s+1]]%q_mod))%q_mod)%q_mod))%q_mod\
-                        +A_relative_position[s+Num_pattern+1]%q_mod)%q_mod;
+                value_A_long=((d_prime_power\
+                *(((value_A_long%q_mod-(h*A_relative_position[s+1])%q_mod)%q_mod-(temp*small_prime_power[Num_pattern-1-A_relative_position_next[s+1]])%q_mod)%q_mod))%q_mod\
+                        +A_relative_position[s+Num_pattern+1])%q_mod;
                 while(value_A_long<0){
                     value_A_long=value_A_long+q_mod;
                 }
             }
             else{
                 /*不影響value 照常運作*/
-                value_A_long=(((d_prime_power%q_mod)\
-                *((value_A_long%q_mod-(((h%q_mod)*(A_relative_position[s+1]%q_mod))%q_mod))%q_mod))%q_mod\
-                        +A_relative_position[s+Num_pattern+1]%q_mod)%q_mod;
+                value_A_long=((d_prime_power\
+                *((value_A_long%q_mod-(h*A_relative_position[s+1])%q_mod)%q_mod))%q_mod\
+                        +A_relative_position[s+Num_pattern+1])%q_mod;
                 while(value_A_long<0){
                     value_A_long=value_A_long+q_mod;
                 }
@@ -180,4 +180,3 @@ void count(long long int array[],int n){
         array[i]=((small_prime%big_prime)*(array[i-1]%big_prime))%big_prime;
     }
 }
-
