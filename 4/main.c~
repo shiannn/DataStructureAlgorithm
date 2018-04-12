@@ -3,8 +3,8 @@
 #include <math.h>
 #include <string.h>
 
-#define big_prime 97
-#define small_prime 7
+#define big_prime 2860486313
+#define small_prime 479001599
 
 #define max 10000010
 //#define debug_input
@@ -113,8 +113,10 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
 
         value_A_long=((((value_A_long%q_mod)*(d_prime_power%q_mod))%q_mod)\
                         +(A_relative_position[i]%q_mod))%q_mod;
+
         value_B_short=((((value_B_short%q_mod)*(d_prime_power%q_mod))%q_mod)\
                         +(B_relative_position[i]%q_mod))%q_mod;
+
     }
 
     #ifdef debug_rabin_value
@@ -140,12 +142,18 @@ void Rabin_Karp_Matcher(char Text[],char Pattern[],\
                 value_A_long=(((d_prime_power%q_mod)\
                 *(((value_A_long%q_mod-((h%q_mod)*(A_relative_position[s+1]%q_mod))%q_mod)%q_mod-((temp%q_mod)*(small_prime_power[Num_pattern-1-A_relative_position_next[s+1]]%q_mod))%q_mod)%q_mod))%q_mod\
                         +A_relative_position[s+Num_pattern+1]%q_mod)%q_mod;
+                while(value_A_long<0){
+                    value_A_long=value_A_long+q_mod;
+                }
             }
             else{
                 /*不影響value 照常運作*/
                 value_A_long=(((d_prime_power%q_mod)\
                 *((value_A_long%q_mod-(((h%q_mod)*(A_relative_position[s+1]%q_mod))%q_mod))%q_mod))%q_mod\
                         +A_relative_position[s+Num_pattern+1]%q_mod)%q_mod;
+                while(value_A_long<0){
+                    value_A_long=value_A_long+q_mod;
+                }
             }
             /*不包含(s+1) 往後pattern格*/
         }
