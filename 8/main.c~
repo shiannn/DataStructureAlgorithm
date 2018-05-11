@@ -6,8 +6,6 @@
 
 //#define debug_input
 //#define debug_decrease_heap
-#define debug_minId
-#define debug_largest
 char student_names[max_people][max_length];
 int leader[max_people];
 int NumOfPeopleInGroup[max_people];
@@ -17,7 +15,7 @@ int position_in_heap[max_people];
 int heap[max_people];
 int heap_size,heap_capacity;
 
-int main()
+int main01()
 {
     int N_student,M_events;
     scanf("%d",&N_student);
@@ -50,18 +48,14 @@ int main()
 
     #endif // debug_input
     int type,group1,group2;
-    int ans;
     for(i=0;i<M_events;i++){
         scanf("%d",&type);
         if(type==1){
             scanf("%d %d",&group1,&group2);
             /*合併union*/
-            myunion(group1,group2);
         }
         else if(type==2){
             /*輸出最大組最小人name*/
-            ans=extract_max();
-            printf("%s\n",student_names[ans]);
         }
         #ifdef debug_input
             printf("%d\n",type);
@@ -103,7 +97,7 @@ int main22(){/*測試heap*/
     }
     printf("\n");
 }
-int main33(){/*測試extract max*/
+int main(){/*測試extract max*/
     int i;
     heap_size=20;
     for(i=1;i<=20;i++){
@@ -114,56 +108,6 @@ int main33(){/*測試extract max*/
     printf("%d\n",extract_max());
     printf("%d\n",extract_max());
     printf("%d\n",extract_max());
-}
-int main44(){//測試用組內人數做heap
-    int i;
-    for(i=1;i<=10;i++){
-        heap[i]=i;
-    }
-    heap_size=10;
-    for(i=1;i<=10;i++){
-        NumOfPeopleInGroup[i]=11*i-i*i;
-    }
-    for(i=1;i<=10;i++){
-        printf("%d ",heap[i]);
-    }
-    printf("\n");
-    //increase_heapify(heap,5);
-    decrease_heapify(heap,3);
-    //printf("minID of 5==%d\n",minId[5]);
-    for(i=1;i<=10;i++){
-        printf("%d ",heap[i]);
-    }
-}
-int main55(){/*測試union和heap連動*/
-    int i;
-    for(i=1;i<=10;i++){
-        minId[i]=i;
-    }
-    for(i=1;i<=10;i++){
-        leader[i]=i;
-    }
-    for(i=1;i<=10;i++){
-        position_in_heap[i]=i;
-        NumOfPeopleInGroup[i]=1;
-    }
-    for(i=1;i<=10;i++){
-        heap[i]=i;
-    }
-    heap_size=10;
-    for(i=1;i<=10;i++){
-        printf("%d ",heap[i]);
-    }
-    printf("\n");
-    myunion(2,3);
-    for(i=1;i<=10;i++){
-        printf("%d ",leader[i]);
-    }
-    printf("\n");
-    for(i=1;i<=10;i++){
-        printf("%d ",heap[i]);
-    }
-    printf("\n");
 }
 int extract_max(){
     int ret;
@@ -181,21 +125,12 @@ int extract_max(){
 }
 void increase_heapify(int A[],int i){
     int pos=i;
-    while(pos!=1&&\
-          NumOfPeopleInGroup[A[parent(pos)]]\
-          <NumOfPeopleInGroup[A[pos]]){
-        /*組內人數比上面的大就往上*/
-        exchange(A,pos,parent(pos));
-        pos=parent(pos);
-    }
-    while(pos!=1&&\
-          minId[A[parent(pos)]]>minId[A[pos]]){
-        /*組內最小id比上面小 就往上*/
+    while(pos!=1&&A[parent(pos)]<A[pos]){
         exchange(A,pos,parent(pos));
         pos=parent(pos);
     }
 }
-void decrease_heapify(int A[],int i){//人變少
+void decrease_heapify(int A[],int i){
     int l=left(i);
     int r=right(i);
     int largest=i;
@@ -203,48 +138,17 @@ void decrease_heapify(int A[],int i){//人變少
         printf("l==%d r==%d i==%d\n",l,r,i);
         printf("heap_size==%d A[l]==%d A[i]==%d\n",heap_size,A[l],A[i]);
     #endif // debug_decrease_heap
-    if(l<=heap_size&&\
-       NumOfPeopleInGroup[A[l]]>\
-       NumOfPeopleInGroup[A[i]]){
+    if(l<=heap_size&&A[l]>A[i]){
         #ifdef debug_decrease_heap
             printf("left big\n");
         #endif // debug_decrease_heap
         largest=l;
-        //printf("here\n");
     }
-    else if(l<=heap_size&&\
-            NumOfPeopleInGroup[A[l]]<\
-            NumOfPeopleInGroup[A[i]]){
+    else{
         largest=i;
     }
-    else if(l<=heap_size&&\
-            NumOfPeopleInGroup[A[l]]==\
-            NumOfPeopleInGroup[A[i]]){
-        if(minId[A[l]]<minId[A[i]]){
-            largest=l;
-        }
-        else if(minId[A[l]]>minId[A[i]]){
-            largest=i;
-        }
-    }
-    /*
-    printf("large num peo==%d\n",NumOfPeopleInGroup[A[largest]]);
-    printf("r==%d\n",r);
-    printf("r num peo==%d\n",NumOfPeopleInGroup[A[r]]);
-    */
-    if(r<=heap_size&&\
-       NumOfPeopleInGroup[A[r]]>\
-       NumOfPeopleInGroup[A[largest]]){
-
+    if(r<=heap_size&&A[r]>A[largest]){
         largest=r;
-    }
-    else if(r<=heap_size&&\
-       NumOfPeopleInGroup[A[r]]==\
-       NumOfPeopleInGroup[A[largest]]){
-        if(minId[A[r]]<minId[A[largest]]){
-            largest=r;
-            //printf("here2\n");
-        }
     }
     #ifdef debug_decrease_heap
         printf("i==%d largest==%d\n",i,largest);
@@ -287,16 +191,11 @@ void myunion(int x,int y){
         /*x_leader這團人數增加*/
         NumOfPeopleInGroup[x_leader]\
         +=NumOfPeopleInGroup[y_leader];
-        /*維護heap*/
-        increase_heapify(heap\
-                ,position_in_heap[x_leader]);
         /*y的人數歸零*/
         NumOfPeopleInGroup[y_leader]=0;
-        decrease_heapify(heap\
-                ,position_in_heap[y_leader]);
         /*投靠*/
         leader[y]=x_leader;
-
+        /*維護heap*/
 
         return;
     }
@@ -304,18 +203,11 @@ void myunion(int x,int y){
         /*y_leader這團人數增加*/
         NumOfPeopleInGroup[y_leader]\
         +=NumOfPeopleInGroup[x_leader];
-        /*維護heap*/
-        increase_heapify(heap\
-                ,position_in_heap[y_leader]);
         /*x的人數歸零*/
         NumOfPeopleInGroup[x_leader]=0;
-        /*維護heap*/
-        decrease_heapify(heap\
-                ,position_in_heap[x_leader]);
-
         /*投靠*/
         leader[x]=y_leader;
-
+        /*維護heap*/
 
         return;
     }
