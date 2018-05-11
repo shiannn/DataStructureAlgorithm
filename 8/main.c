@@ -8,6 +8,17 @@
 //#define debug_decrease_heap
 #define debug_minId
 #define debug_largest
+
+int extract_max();
+void increase_heapify(int A[],int i);
+void decrease_heapify(int A[],int i);
+void exchange(int A[],int i,int largest);
+int parent(int i);
+int left(int i);
+int right(int i);
+int find(int x);
+void myunion(int x,int y);
+
 char student_names[max_people][max_length];
 int leader[max_people];
 int NumOfPeopleInGroup[max_people];
@@ -73,7 +84,8 @@ int main()
 
     return 0;
 }
-int main11(){/*測試disjoint set*/
+/*
+int main11(){//測試disjoint set
     int a;
     for(a=1;a<=10;a++){
         leader[a]=a;
@@ -87,7 +99,7 @@ int main11(){/*測試disjoint set*/
     }
 
 }
-int main22(){/*測試heap*/
+int main22(){//測試heap
     int arr[20]={-1,1,2,3,4,5,6,7};
     heap_size=7;
     int i;
@@ -103,7 +115,7 @@ int main22(){/*測試heap*/
     }
     printf("\n");
 }
-int main33(){/*測試extract max*/
+int main33(){//測試extract max
     int i;
     heap_size=20;
     for(i=1;i<=20;i++){
@@ -135,7 +147,7 @@ int main44(){//測試用組內人數做heap
         printf("%d ",heap[i]);
     }
 }
-int main55(){/*測試union和heap連動*/
+int main55(){//測試union和heap連動
     int i;
     for(i=1;i<=10;i++){
         minId[i]=i;
@@ -165,6 +177,7 @@ int main55(){/*測試union和heap連動*/
     }
     printf("\n");
 }
+*/
 int extract_max(){
     int ret;
     if(heap_size==0)return -1;
