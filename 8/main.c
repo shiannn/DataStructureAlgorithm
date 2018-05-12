@@ -96,8 +96,12 @@ void increase_heapify(int A[],int i){
         exchange(A,pos,parent(pos));
         pos=parent(pos);
     }
+    /*此時上面的人數一定是>=pos的*/
     while(pos!=1&&\
-          minId[A[parent(pos)]]>minId[A[pos]]){
+          NumOfPeopleInGroup[A[parent(pos)]]\
+          ==NumOfPeopleInGroup[A[pos]]&&\
+          minId[A[parent(pos)]]>minId[A[pos]]
+          ){
         /*組內最小id比上面小 就往上*/
         exchange(A,pos,parent(pos));
         pos=parent(pos);
@@ -211,5 +215,4 @@ void myunion(int x,int y){
         return;
     }
 }
-
 

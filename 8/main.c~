@@ -186,7 +186,7 @@ void myunion(int x,int y){
         decrease_heapify(heap\
                 ,position_in_heap[y_leader]);
         /*投靠*/
-        leader[y]=x_leader;
+        leader[y_leader]=x_leader;
 
 
         return;
@@ -205,10 +205,11 @@ void myunion(int x,int y){
                 ,position_in_heap[x_leader]);
 
         /*投靠*/
-        leader[x]=y_leader;
+        leader[x_leader]=y_leader;
 
 
         return;
     }
 }
+
 
