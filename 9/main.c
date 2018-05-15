@@ -10,9 +10,8 @@
 char events_to_be_process[max_length];
 char events_64bits[max_length];
 char oper_events[max_length];
-char answer[max_length];
 
-void preprocess_string(char*events_64bits,const char*events_to_be_process);
+void preprocess_string(char events_64bits[],const char events_to_be_process[]);
 
 struct trie_node{
     int value;/*記錄這個節點是第幾個字的結尾*/
@@ -33,11 +32,10 @@ int leaf_node(trie_node*Trie_Node);
 int can_be_free(trie_node*Trie_Node);
 void insert(trie*Trie,char string[]);
 void query(trie*Trie,char string[]);
-void print_answer(char str[]);
 int search(trie*Trie,char string[]);
 trie_node*get_node(void);
 void initialize(trie *ptr_for_trie);
-void preprocess_string(char*events_64bits,const char*events_to_be_process);
+void preprocess_string(char events_64bits[],const char events_to_be_process[]);
 int char_bits_to_int_bits(char a);
 int main()
 {
@@ -58,8 +56,6 @@ int main()
         /*補上0後加入trie*/
 
         insert(&TRIE,events_64bits);
-        //delete_string(&TRIE,events_64bits);
-        //printf("%d\n",search(&TRIE,events_64bits));
     }
     int M_operations;
     scanf("%d",&M_operations);
@@ -78,22 +74,14 @@ int main()
         }
         else if(op[0]=='Q'){
             query(&TRIE,events_64bits);
-            /*將answer去除起頭0*/
-            print_answer(answer);
-            //printf("%s\n",answer);
         }
     }
 
     return 0;
 }
-void print_answer(char str[]){
-    int i=0;
-    while(str[i]!='1'){
-        i++;
-    }
-    printf("%s\n",str+i);
-}
+
 void query(trie*Trie,char string[]){
+    int start=-1;
     int level;
     int length=strlen(string);
     int zero_or_one;
@@ -104,30 +92,56 @@ void query(trie*Trie,char string[]){
         zero_or_one=char_bits_to_int_bits(string[level]);
         /*string在該格是1還是0*/
         if(zero_or_one==1){
+
+            //printf("0");
             if(ptr->children[0]){
                 /*走TRIE中0那一條*/
-                answer[level]='0';
+                //answer[level]='0';
                 ptr=ptr->children[0];
+                //printf("0");
+                if(start==1){
+                    printf("0");
+                }
             }
             else{
+                if(start==-1){
+                    start=1;
+                }
                 /*走1那一條*/
-                answer[level]='1';
+                //answer[level]='1';
                 ptr=ptr->children[1];
+                //printf("1");
+                if(start==1){
+                    printf("1");
+                }
             }
         }
         else if(zero_or_one==0){
+            //printf("1");
             if(ptr->children[1]){
+                if(start==-1){
+                    start=1;
+                }
                 /*走TRIE中1那一條*/
-                answer[level]='1';
+                //answer[level]='1';
                 ptr=ptr->children[1];
+                //printf("1");
+                if(start==1){
+                    printf("1");
+                }
             }
             else{
                 /*走0那一條*/
-                answer[level]='0';
+                //answer[level]='0';
                 ptr=ptr->children[0];
+                //printf("0");
+                if(start==1){
+                    printf("0");
+                }
             }
         }
     }
+    printf("\n");
 }
 int search(trie*Trie,char string[]){
     int level;
@@ -144,7 +158,7 @@ int search(trie*Trie,char string[]){
         }
         ptr=ptr->children[zero_or_one];
     }
-    return (ptr!=NULL&&ptr->value);
+    return (0!=ptr&&ptr->value);
 }
 void delete_string(trie*Trie,char string[]){
     int len=strlen(string);
@@ -239,7 +253,7 @@ void initialize(trie *ptr_for_trie){
     ptr_for_trie->count=0;
 }
 
-void preprocess_string(char*events_64bits,const char*events_to_be_process){
+void preprocess_string(char events_64bits[],const char events_to_be_process[]){
     int length=strlen(events_to_be_process);
     int num_of_zero=64-length;
      /*num_of_zero>0才做*/
