@@ -66,13 +66,10 @@ int main()
     char op[5];
     int j,k;
     for(j=1;j<=M_operations;j++){
-        for(k=0;k<max_length;k++){
-            answer[k]='\0';
-        }
         scanf("%s %s",op,oper_events);
-        //printf("%c %s\n",op[0],oper_events);
+
         preprocess_string(events_64bits,oper_events);
-        //printf("%s\n",events_64bits);
+
         if(op[0]=='U'){
             insert(&TRIE,events_64bits);
         }
@@ -245,11 +242,18 @@ void initialize(trie *ptr_for_trie){
 void preprocess_string(char*events_64bits,const char*events_to_be_process){
     int length=strlen(events_to_be_process);
     int num_of_zero=64-length;
-    int j;
-    for(j=0;j<num_of_zero;j++){
-        events_64bits[j]='0';
+     /*num_of_zero>0才做*/
+    if(num_of_zero>0){
+        int j;
+        for(j=0;j<num_of_zero;j++){
+            events_64bits[j]='0';
+        }
+        strcpy(events_64bits+num_of_zero,events_to_be_process);
     }
-    strcpy(events_64bits+num_of_zero,events_to_be_process);
+    else if(num_of_zero==0){
+        /*不用補了*/
+        strcpy(events_64bits,events_to_be_process);
+    }
 }
 int char_bits_to_int_bits(char a){
     if(a=='0'){

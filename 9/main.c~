@@ -63,9 +63,12 @@ int main()
     }
     int M_operations;
     scanf("%d",&M_operations);
-    char op[2];
-    int j;
+    char op[5];
+    int j,k;
     for(j=1;j<=M_operations;j++){
+        for(k=0;k<max_length;k++){
+            answer[k]='\0';
+        }
         scanf("%s %s",op,oper_events);
         //printf("%c %s\n",op[0],oper_events);
         preprocess_string(events_64bits,oper_events);
