@@ -7,11 +7,11 @@
 #define branch 2
 
 //#define debug_input
+//#define debug_trans
 char events_to_be_process[max_length];
 char events_64bits[max_length];
 char oper_events[max_length];
-
-void preprocess_string(char events_64bits[],const char events_to_be_process[]);
+char answer[max_length];
 
 struct trie_node{
     int value;/*記錄這個節點是第幾個字的結尾*/
@@ -36,6 +36,7 @@ int search(trie*Trie,char string[]);
 trie_node*get_node(void);
 void initialize(trie *ptr_for_trie);
 void preprocess_string(char events_64bits[],const char events_to_be_process[]);
+void print_answer(char str[]);
 int char_bits_to_int_bits(char a);
 int main()
 {
@@ -65,6 +66,10 @@ int main()
         scanf("%s %s",op,oper_events);
 
         preprocess_string(events_64bits,oper_events);
+        #ifdef debug_trans
+            printf("%s\n",oper_events);
+            printf("%s\n",events_64bits);
+        #endif // debug_trans
 
         if(op[0]=='U'){
             insert(&TRIE,events_64bits);
@@ -74,16 +79,35 @@ int main()
         }
         else if(op[0]=='Q'){
             query(&TRIE,events_64bits);
+            /*去除起頭0*/
+            print_answer(answer);
+        }
+        else if(op[0]=='S'){
+            printf("%d\n",search(&TRIE,events_64bits));
         }
     }
 
     return 0;
 }
+void print_answer(char str[]){
+    //printf("answer==%s\n",str);
+    int i;
+    for(i=0;i<64;i++){
+        if(str[i]=='1'){
+            printf("%s\n",&str[i]);
+            return;
+        }
+    }
+    printf("0\n");
 
+}
 void query(trie*Trie,char string[]){
-    int start=-1;
+    //printf("%s\n",string);
     int level;
     int length=strlen(string);
+    #ifdef debug_trans
+        printf("len==%d\n",length);
+    #endif // debug_trans
     int zero_or_one;
     trie_node*ptr;
 
@@ -92,56 +116,32 @@ void query(trie*Trie,char string[]){
         zero_or_one=char_bits_to_int_bits(string[level]);
         /*string在該格是1還是0*/
         if(zero_or_one==1){
-
-            //printf("0");
             if(ptr->children[0]){
                 /*走TRIE中0那一條*/
-                //answer[level]='0';
+                //printf("here\n");
+                answer[level]='0';
                 ptr=ptr->children[0];
-                //printf("0");
-                if(start==1){
-                    printf("0");
-                }
             }
             else{
-                if(start==-1){
-                    start=1;
-                }
                 /*走1那一條*/
-                //answer[level]='1';
+                answer[level]='1';
                 ptr=ptr->children[1];
-                //printf("1");
-                if(start==1){
-                    printf("1");
-                }
             }
         }
         else if(zero_or_one==0){
-            //printf("1");
             if(ptr->children[1]){
-                if(start==-1){
-                    start=1;
-                }
                 /*走TRIE中1那一條*/
-                //answer[level]='1';
+                answer[level]='1';
                 ptr=ptr->children[1];
-                //printf("1");
-                if(start==1){
-                    printf("1");
-                }
             }
             else{
                 /*走0那一條*/
-                //answer[level]='0';
+                answer[level]='0';
                 ptr=ptr->children[0];
-                //printf("0");
-                if(start==1){
-                    printf("0");
-                }
             }
         }
     }
-    printf("\n");
+    //printf("\n");
 }
 int search(trie*Trie,char string[]){
     int level;
@@ -162,6 +162,9 @@ int search(trie*Trie,char string[]){
 }
 void delete_string(trie*Trie,char string[]){
     int len=strlen(string);
+    #ifdef debug_trans
+        printf("len==%d\n",len);
+    #endif // debug_trans
     if(len>0){
         delete_helper(Trie->root,string,0,len);
     }
@@ -182,18 +185,25 @@ int delete_helper(trie_node*Trie_Node,char string[],int level,int len){
         else{
             int zero_or_one=char_bits_to_int_bits(string[level]);
             if(delete_helper(Trie_Node->children[zero_or_one],string,level+1,len)){
-                FREE(Trie_Node->children[zero_or_one]);
+                //printf("we free\n");
+                free(Trie_Node->children[zero_or_one]);
+                Trie_Node->children[zero_or_one]=NULL;
                 /*往回傳，遇到分支或是另外一個字的結尾後就不能再free了*/
+                //printf("go_back_with leaf==%d can_be==%d\n"\
+                       ,!leaf_node(Trie_Node),can_be_free(Trie_Node));
                 return (!leaf_node(Trie_Node)&&can_be_free(Trie_Node));
             }
         }
     }
     return 0;
 }
+/*
 void FREE(trie_node*Trie_Node){
     free(Trie_Node);
     Trie_Node=NULL;
+    printf("free it\n");
 }
+*/
 int leaf_node(trie_node*Trie_Node){
     return (Trie_Node->value != 0);
 }
@@ -202,15 +212,20 @@ int can_be_free(trie_node*Trie_Node){
     int i;
     for(i=0;i<2;i++){
         if(Trie_Node->children[i]){
+            //printf("with children==%d\n",i);
             return 0;
         }
     }
+    //printf("no children\n");
     return 1;
 }
 void insert(trie*Trie,char string[]){
     /*添加string到trie裡面*/
     int level;//隨著字元數慢慢往下加進trie裡面
     int length=strlen(string);
+    #ifdef debug_trans
+        printf("len==%d\n",length);
+    #endif // debug_trans
     int zero_or_one;
 
     Trie->count++;
@@ -255,19 +270,15 @@ void initialize(trie *ptr_for_trie){
 
 void preprocess_string(char events_64bits[],const char events_to_be_process[]){
     int length=strlen(events_to_be_process);
-    int num_of_zero=64-length;
-     /*num_of_zero>0才做*/
-    if(num_of_zero>0){
-        int j;
-        for(j=0;j<num_of_zero;j++){
-            events_64bits[j]='0';
-        }
-        strcpy(events_64bits+num_of_zero,events_to_be_process);
+    int i,j;
+    for(i=length-1,j=63;i>=0;i--,j--){
+        /*填上原本字串部分*/
+        events_64bits[j]=events_to_be_process[i];
     }
-    else if(num_of_zero==0){
-        /*不用補了*/
-        strcpy(events_64bits,events_to_be_process);
+    for(;j>=0;j--){
+        events_64bits[j]='0';
     }
+    events_64bits[64]='\0';
 }
 int char_bits_to_int_bits(char a){
     if(a=='0'){
