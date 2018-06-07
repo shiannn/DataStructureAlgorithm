@@ -14,7 +14,7 @@
 struct node_attribute{
     int color;
     int distance;
-    //int parent;
+    int parent;
 };
 typedef struct node_attribute node_attribute;
 
@@ -89,13 +89,8 @@ int main()
         #endif // debug_input
         goal=s^t;
         /*藉由BFS已知0到goal的最短距離*/
-        if(attribute_array[goal].distance==0){
-            if(goal==0){
-                printf("%d\n",attribute_array[goal].distance);
-            }
-            else{
-                printf("UNREACHABLE\n");
-            }
+        if(attribute_array[goal].distance==infinte){
+            printf("UNREACHABLE\n");
         }
         else{
             printf("%d\n",attribute_array[goal].distance);
@@ -128,7 +123,7 @@ int main01(){/*test graph ds*/
     for(i=0;i<10;i++){
         printf("%d %d %d\n",attribute_array[i].color\
                             ,attribute_array[i].distance\
-                            /*,attribute_array[i].parent*/);
+                            ,attribute_array[i].parent);
     }
 }
 int main02(){//test queue ds
@@ -142,15 +137,13 @@ int main02(){//test queue ds
 }
 void BFS(Graph*graph,int start){
     int i;
-    /*
     for(i=0;i<graph->num_of_vertex;i++){
         attribute_array[i].color=WHITE;
         attribute_array[i].distance=infinte;
         attribute_array[i].parent=NIL;
     }
-    */
     attribute_array[start].color=GRAY;
-    //attribute_array[start].parent=NIL;
+    attribute_array[start].parent=NIL;
     attribute_array[start].distance=0;
 
     Queue*queue=create_queue(max_vertex);
@@ -166,7 +159,7 @@ void BFS(Graph*graph,int start){
                 attribute_array[v].color=GRAY;
                 attribute_array[v].distance=\
                     attribute_array[u].distance+1;
-                //attribute_array[v].parent=u;
+                attribute_array[v].parent=u;
                 enqueue(queue,v);
             }
             ptr=ptr->next;
