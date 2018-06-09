@@ -72,30 +72,20 @@ int main()
     if(N==1){
         for(k=0;k<M;k++){
             if(input[k].height==0){
-                zero=1;
+                zero++;
             }
         }
-        if(zero==1){
-            printf("%d\n",M-1);
-        }
-        else{
-            printf("%d\n",M);
-        }
+        printf("%d\n",M-zero);
         return 0;
     }
     else{
         if(M==1){
             for(k=0;k<N;k++){
                 if(input[k].height==0){
-                    zero=1;
+                    zero++;
                 }
             }
-            if(zero==1){
-                printf("%d\n",N-1);
-            }
-            else{
-                printf("%d\n",N);
-            }
+            printf("%d\n",N-zero);
             return 0;
         }
     }
