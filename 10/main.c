@@ -68,13 +68,34 @@ int main()
             k++;
         }
     }
+    int zero=0;
     if(N==1){
-        printf("%d\n",M);
+        for(k=0;k<M;k++){
+            if(input[k].height==0){
+                zero=1;
+            }
+        }
+        if(zero==1){
+            printf("%d\n",M-1);
+        }
+        else{
+            printf("%d\n",M);
+        }
         return 0;
     }
     else{
         if(M==1){
-            printf("%d\n",N);
+            for(k=0;k<N;k++){
+                if(input[k].height==0){
+                    zero=1;
+                }
+            }
+            if(zero==1){
+                printf("%d\n",N-1);
+            }
+            else{
+                printf("%d\n",N);
+            }
             return 0;
         }
     }
