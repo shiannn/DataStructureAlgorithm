@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define max_input 100010
+#define max_input 100
 #define DATA int
 
 //#define debug_input
 //#define debug_graph
 //#define debug_stack
+//#define debug_update
 struct adjacency_node{
     int number;
     struct adjacency_node*next;
@@ -93,7 +94,7 @@ int main()
             sorting[i]=input[M*i+j];
         }
         /*sorting 一行共N個元素*/
-        QuickSort(sorting,0,N);
+        QuickSort(sorting,0,N-1);
         for(i=0;i<N-1;i++){
             add_edge(graph,sorting[i].num,sorting[i+1].num);
         }
@@ -119,6 +120,10 @@ int main()
         /*將其周圍的點距離更新為更長*/
         adjacency_node*ptr=graph->list_array[start_point].head;
         while(ptr!=NULL){
+            #ifdef debug_update
+                printf("start == %d start_point_dis==%d adj_point==%d adj_point_dis==%d\n",start_point,distance[start_point],ptr->number,distance[ptr->number]);
+
+            #endif // debug_update
             if(distance[start_point]+1>distance[ptr->number]){
                 distance[ptr->number]=distance[start_point]+1;
             }
@@ -243,4 +248,16 @@ DATA Pop(struct ArrayStack*S){
     else
         return (S->array[S->top--]);
 }
-
+/*
+10 1
+12
+21
+15
+3
+2
+6
+50
+78
+9
+30
+*/
