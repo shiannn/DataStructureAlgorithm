@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define max_input 100
+#define max_input 100010
 #define DATA int
 
 //#define debug_input
@@ -261,3 +261,4 @@ DATA Pop(struct ArrayStack*S){
 9
 30
 */
+/
