@@ -68,6 +68,16 @@ int main()
             k++;
         }
     }
+    if(N==1){
+        printf("%d\n",M);
+        return 0;
+    }
+    else{
+        if(M==1){
+            printf("%d\n",N);
+            return 0;
+        }
+    }
     #ifdef debug_input
         k=0;
         for(i=0;i<N;i++){
