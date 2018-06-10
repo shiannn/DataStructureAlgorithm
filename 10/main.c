@@ -68,24 +68,28 @@ int main()
             k++;
         }
     }
-    int zero=0;
+    unsigned int height_kind=0;
     if(N==1){
-        for(k=0;k<M;k++){
-            if(input[k].height==0){
-                zero++;
+        QuickSort(input,0,M-1);
+        for(k=0;k<=M-2;k++){
+            if(input[k].height!=input[k+1].height){
+                height_kind++;
             }
         }
-        printf("%d\n",M-zero);
+        height_kind++;
+        printf("%u\n",height_kind);
         return 0;
     }
     else{
         if(M==1){
-            for(k=0;k<N;k++){
-                if(input[k].height==0){
-                    zero++;
+            QuickSort(input,0,N-1);
+            for(k=0;k<=N-2;k++){
+                if(input[k].height!=input[k+1].height){
+                    height_kind++;
                 }
             }
-            printf("%d\n",N-zero);
+            height_kind++;
+            printf("%u\n",height_kind);
             return 0;
         }
     }
