@@ -161,8 +161,9 @@ int main()
             #endif // debug_update
             if((array[start_point].distance)+1>(array[ptr->number].distance)){
                 array[ptr->number].distance=array[start_point].distance+1;
+                array[ptr->number].repeat=array[start_point].repeat;
                 if(input[start_point-1].height==input[ptr->number-1].height){/*房高一樣就重複*/
-                    array[ptr->number].repeat=array[start_point].repeat+1;
+                    array[ptr->number].repeat++;
                     //start_point的distance可能在別處被更新
                     //5可能是那邊的5而不是這個5的distance
                     //printf("start==%d start.height==%d ptr->num===%d ptr->number.height==%d\n",start_point,input[start_point-1].height,ptr->number,input[ptr->number-1].height);
