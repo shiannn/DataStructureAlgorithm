@@ -39,6 +39,9 @@ void swap(house_vertex *a, house_vertex *b);
 int Partition(house_vertex *arr, int front, int end);
 void QuickSort(house_vertex *arr, int front, int end);
 
+void mergeSort(house_vertex *arr,int l,int r);
+void merge(house_vertex*arr,int l,int m,int r);
+
 struct ArrayStack{
     int top;
     int capacity;
@@ -70,7 +73,7 @@ int main()
     }
     unsigned int height_kind=0;
     if(N==1){
-        QuickSort(input,0,M-1);
+        mergeSort(input,0,M-1);
         for(k=0;k<=M-2;k++){
             if(input[k].height!=input[k+1].height){
                 height_kind++;
@@ -82,7 +85,7 @@ int main()
     }
     else{
         if(M==1){
-            QuickSort(input,0,N-1);
+            mergeSort(input,0,N-1);
             for(k=0;k<=N-2;k++){
                 if(input[k].height!=input[k+1].height){
                     height_kind++;
@@ -173,6 +176,56 @@ void topology_sort(Graph*graph,int visit_array[],struct ArrayStack*ptrStack,int 
         }
     }
     Push(ptrStack,start);
+}
+void merge(house_vertex*arr,int l,int m,int r){
+    int i,j,k;
+    int n1=m-l+1;
+    int n2=r-m;
+
+    int *L=(int*)malloc(n1*sizeof(int));
+    int *R=(int*)malloc(n2*sizeof(int));
+    for (i=0;i<n1;i++)
+        L[i]=arr[l+i].height;
+    for (j =0;j<n2;j++)
+        R[j]=arr[m+1+j].height;
+    i = 0;
+    j = 0;
+    k = l;
+    while (i<n1&&j<n2)
+    {
+        if (L[i]<=R[j])
+        {
+            arr[k].height=L[i];
+            i++;
+        }
+        else
+        {
+            arr[k].height=R[j];
+            j++;
+        }
+        k++;
+    }
+    while (i<n1)
+    {
+        arr[k].height=L[i];
+        i++;
+        k++;
+    }
+    while (j<n2)
+    {
+        arr[k].height=R[j];
+        j++;
+        k++;
+    }
+}
+void mergeSort(house_vertex *arr,int l,int r){
+    if(l<r){
+        int m=l+(r-l)/2;
+
+        mergeSort(arr,l,m);
+        mergeSort(arr,m+1,r);
+        merge(arr,l,m,r);
+    }
 }
 void swap(house_vertex *a, house_vertex *b){
     house_vertex temp = *a;
