@@ -150,6 +150,10 @@ int main()
         }
     #endif // debug_stack
     //int distance[max_input]={0};
+    for(i=0;i<max_input;i++){
+        array[i].distance=1;
+        array[i].repeat=0;
+    }
     while(!IsEmptyStack(ptr_stack)){
         int start_point=Pop(ptr_stack);
         /*將其周圍的點距離更新為更長*/
@@ -165,7 +169,7 @@ int main()
                 }
                 //不能更新 維持原樣
             }
-            else{
+            else if(input[start_point-1].height<input[ptr->number-1].height){
                 if((array[start_point].distance)+1>(array[ptr->number].distance)){
                     array[ptr->number].distance=array[start_point].distance+1;
                     //array[ptr->number].repeat=array[start_point].repeat;
@@ -180,13 +184,13 @@ int main()
             ptr=ptr->next;
         }
     }
-    int max_path=0;
+    int max_path=-1;
     for(i=1;i<=N*M;i++){
         if(array[i].distance>max_path){
             max_path=array[i].distance;
         }
     }
-    printf("%d\n",max_path+1);
+    printf("%d\n",max_path);
     return 0;
 }
 void topology_sort(Graph*graph,int visit_array[],struct ArrayStack*ptrStack,int start){
@@ -361,3 +365,4 @@ DATA Pop(struct ArrayStack*S){
 9
 30
 */
+
