@@ -153,7 +153,10 @@ int main()
 
             #endif // debug_update
             if(distance[start_point]+1>distance[ptr->number]){
-                distance[ptr->number]=distance[start_point]+1;
+                if(input[start_point-1].height!=input[ptr->number-1].height){/*房高不同才用*/
+                    distance[ptr->number]=distance[start_point]+1;
+                    //printf("start==%d start.height==%d ptr->num===%d ptr->number.height==%d\n",start_point,input[start_point].height,ptr->number,input[ptr->number].height);
+                }
             }
             ptr=ptr->next;
         }
