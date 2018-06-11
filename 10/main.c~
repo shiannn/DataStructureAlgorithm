@@ -159,15 +159,22 @@ int main()
                 printf("start == %d start_point_dis==%d adj_point==%d adj_point_dis==%d\n",start_point,distance[start_point],ptr->number,distance[ptr->number]);
 
             #endif // debug_update
-            if((array[start_point].distance)+1>(array[ptr->number].distance)){
-                array[ptr->number].distance=array[start_point].distance+1;
-                array[ptr->number].repeat=array[start_point].repeat;
-                if(input[start_point-1].height==input[ptr->number-1].height){/*房高一樣就重複*/
-                    array[ptr->number].repeat++;
-                    //start_point的distance可能在別處被更新
-                    //5可能是那邊的5而不是這個5的distance
-                    //printf("start==%d start.height==%d ptr->num===%d ptr->number.height==%d\n",start_point,input[start_point-1].height,ptr->number,input[ptr->number-1].height);
-                    //printf("ptr->number==%d repeat==%d\n",ptr->number,array[ptr->number].repeat);
+            if(input[start_point-1].height==input[ptr->number-1].height){
+                if((array[start_point].distance)+1>(array[ptr->number].distance)){//可以更新
+                    array[ptr->number].distance=array[start_point].distance;
+                }
+                //不能更新 維持原樣
+            }
+            else{
+                if((array[start_point].distance)+1>(array[ptr->number].distance)){
+                    array[ptr->number].distance=array[start_point].distance+1;
+                    //array[ptr->number].repeat=array[start_point].repeat;
+                    /*
+                    if(input[start_point-1].height==input[ptr->number-1].height){//房高一樣就重複
+                        array[ptr->number].repeat++;
+
+                    }
+                    */
                 }
             }
             ptr=ptr->next;
@@ -175,8 +182,8 @@ int main()
     }
     int max_path=0;
     for(i=1;i<=N*M;i++){
-        if((array[i].distance-array[i].repeat)>max_path){
-            max_path=array[i].distance-array[i].repeat;
+        if(array[i].distance>max_path){
+            max_path=array[i].distance;
         }
     }
     printf("%d\n",max_path+1);
@@ -354,4 +361,3 @@ DATA Pop(struct ArrayStack*S){
 9
 30
 */
-

@@ -160,7 +160,7 @@ int main()
 
             #endif // debug_update
             if(input[start_point-1].height==input[ptr->number-1].height){
-                if((array[start_point].distance)+1>(array[ptr->number].distance)){//可以更新
+                if((array[start_point].distance)>(array[ptr->number].distance)){//可以更新
                     array[ptr->number].distance=array[start_point].distance;
                 }
                 //不能更新 維持原樣
